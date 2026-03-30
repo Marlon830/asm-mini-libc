@@ -1,0 +1,16 @@
+main.c
+libasm.so
+*.o
+test
+a.out
+gdb_exe
+libasm.a
+.gdb_history
+peda-session-gdb_exe.txt
+memset.result
+.vscode/
+strncmp.result
+*.gcda
+*.gcno
+unit_tests
+TODO

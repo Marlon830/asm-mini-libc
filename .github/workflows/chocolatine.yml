@@ -1,0 +1,64 @@
+name: minilibc
+on:
+  push:
+    branches-ignore:
+      - 'ga-ignore-*'
+  pull_request:
+    branches-ignore:
+      - 'ga-ignore-*'
+env:
+  EXECUTABLES: "libasm.so"
+jobs:
+  check_program_compilation:
+    name: Program Compilation Checker
+    runs-on: ubuntu-latest
+    container:
+      image: epitechcontent/epitest-docker:latest
+    steps:
+      - uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+      - run: make
+        timeout-minutes: 2
+        continue-on-error: false
+      - run: | 
+            nbword=$(echo $EXECUTABLES | awk -F "," '{print NF}')
+            
+            for i in $(seq 1 $nbword)
+            do
+            exec=$(echo $EXECUTABLES | cut -d "," -f$i)
+            if ! test -x $exec ;
+            then
+                exit 84
+            fi
+            done
+        continue-on-error: false
+  check-unit-tests:
+    name: Tests Runner
+    runs-on: ubuntu-latest
+    needs: check_program_compilation
+    container:
+      image: epitechcontent/epitest-docker:latest
+    steps:
+      - uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+      - run: make tests_run
+        timeout-minutes: 2
+        continue-on-error: false
+  check-functional-tests:
+    name: Functional Tests Checker
+    runs-on: ubuntu-20.04
+    needs: check_program_compilation
+    container:
+      image: epitechcontent/epitest-docker:latest
+    steps:
+      - uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - run: make fonctionnal_tests_run
+        timeout-minutes: 2
+        continue-on-error: false
