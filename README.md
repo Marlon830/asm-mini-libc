@@ -1,6 +1,6 @@
 # Asm Mini LibC
 
-> Made by **Marlon PEGAHI** and **Alexandre BRET**
+> Made by **Marlon PEGAHI**
 
 A minimal reimplementation of essential C standard library functions, written entirely in **x86-64 assembly**.
 ---
